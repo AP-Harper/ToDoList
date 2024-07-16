@@ -36,7 +36,7 @@ public class ToDoListController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getToDoById(@PathVariable Long id) {
         try {
-            ToDo toDo = toDoListRepo.findById(id).orElseThrow(NoSuchElementException::new);
+            ToDo toDo = toDoListRepo.findById(id).orElseThrow(RuntimeException::new);
             return ResponseEntity.ok()
                     .body(new ApiResponse(true, "ToDo retrieved successfully", toDo));
         } catch (Exception e) {
@@ -54,6 +54,20 @@ public class ToDoListController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse(false, "Error creating ToDo entry", null));
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse> updateToDo(@PathVariable Long id, @RequestBody ToDo toDoDetails) {
+        try {
+            ToDo toDoToUpdate = toDoListRepo.findById(id).orElseThrow(RuntimeException::new);
+            toDoToUpdate.setName(toDoDetails.getName());
+            toDoToUpdate.setCompleted(toDoDetails.isCompleted());
+            ToDo updatedToDo = toDoListRepo.save(toDoToUpdate);
+            return ResponseEntity.ok(new ApiResponse(true, id + " updated successfully", updatedToDo));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(false, "Unable to update ToDo Item with ID: " + id, null));
         }
     }
 }
