@@ -1,16 +1,10 @@
 package com.apharper.todolist;
 
-import jakarta.persistence.EntityNotFoundException;
-import org.apache.coyote.Response;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
-import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("api/todos")
@@ -61,7 +55,7 @@ public class ToDoListController {
     public ResponseEntity<ApiResponse> updateToDo(@PathVariable Long id, @RequestBody ToDo toDoDetails) {
         try {
             ToDo toDoToUpdate = toDoListRepo.findById(id).orElseThrow(RuntimeException::new);
-            toDoToUpdate.setName(toDoDetails.getName());
+            toDoToUpdate.setTask(toDoDetails.getTask());
             toDoToUpdate.setCompleted(toDoDetails.isCompleted());
             ToDo updatedToDo = toDoListRepo.save(toDoToUpdate);
             return ResponseEntity.ok(new ApiResponse(true, id + " updated successfully", updatedToDo));

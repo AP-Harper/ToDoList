@@ -1,9 +1,9 @@
 package com.apharper.todolist;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.time.Instant;
+
 
 @Entity
 public class ToDo {
@@ -11,16 +11,21 @@ public class ToDo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
+    private String task;
     private boolean completed;
+
+    private Instant createdDate;
+    private Instant modifiedDate;
 
 
     public ToDo() {
     }
 
-    public ToDo(String name, boolean completed) {
-        this.name = name;
-        this.completed = completed;
+    public ToDo(String task) {
+        this.task = task;
+        completed = false;
+        this.createdDate = Instant.now();
+        this.modifiedDate = Instant.now();
     }
 
     public Long getId() {
@@ -31,12 +36,12 @@ public class ToDo {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTask() {
+        return task;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTask(String task) {
+        this.task = task;
     }
 
     public boolean isCompleted() {
@@ -46,4 +51,22 @@ public class ToDo {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Instant getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Instant modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+
 }
