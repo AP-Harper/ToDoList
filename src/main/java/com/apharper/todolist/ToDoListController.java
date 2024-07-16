@@ -70,4 +70,16 @@ public class ToDoListController {
                     .body(new ApiResponse(false, "Unable to update ToDo Item with ID: " + id, null));
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteToDo(@PathVariable Long id) {
+        try {
+            ToDo toDoToDelete = toDoListRepo.findById(id).orElseThrow(RuntimeException::new);
+            toDoListRepo.delete(toDoToDelete);
+            return ResponseEntity.ok(new ApiResponse(true, id + " deleted", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(false, "Unable to delete " + id, null));
+        }
+    }
 }
