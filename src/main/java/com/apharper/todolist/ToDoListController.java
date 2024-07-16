@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -57,6 +58,7 @@ public class ToDoListController {
             ToDo toDoToUpdate = toDoListRepo.findById(id).orElseThrow(RuntimeException::new);
             toDoToUpdate.setTask(toDoDetails.getTask());
             toDoToUpdate.setCompleted(toDoDetails.isCompleted());
+            toDoToUpdate.setModifiedDate(Instant.now());
             ToDo updatedToDo = toDoListRepo.save(toDoToUpdate);
             return ResponseEntity.ok(new ApiResponse(true, id + " updated successfully", updatedToDo));
         } catch (Exception e) {
