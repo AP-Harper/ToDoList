@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -39,6 +40,46 @@ public class ToDoListController {
                     .body(new ApiResponse(false, "Error retrieving ToDo with ID: " + id, null));
         }
     }
+
+    @GetMapping("/completed")
+    public ResponseEntity<ApiResponse> getCompletedTasks() {
+        try {
+            List<ToDo> toDolist = toDoListRepo.findAll();
+            List<ToDo> completed = new ArrayList<>();
+
+            for (ToDo item : toDolist) {
+                if (item.isCompleted()) {
+                    completed.add(item);
+                }
+            }
+            return  ResponseEntity.ok().
+                    body(new ApiResponse(true, "Completed tasks retrieved successfully", completed));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(false, "Error retrieving completed tasks", null));
+        }
+    }
+
+    @GetMapping("/incomplete")
+    public ResponseEntity<ApiResponse> getIncompleteTasks() {
+        try {
+            List<ToDo> toDoList = toDoListRepo.findAll();
+            List<ToDo> incomplete = new ArrayList<>();
+
+            for (ToDo item : toDoList) {
+                if (!item.isCompleted()) {
+                    incomplete.add(item);
+                }
+            }
+            return ResponseEntity.ok()
+                    .body(new ApiResponse(
+                            true, "Incompleted tasks successfully retrieved", incomplete));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(false, "Error retrieving incomplete tasks", null));
+        }
+    }
+
 
     @PostMapping
     public ResponseEntity<ApiResponse> createToDo(@RequestBody ToDo todo) {

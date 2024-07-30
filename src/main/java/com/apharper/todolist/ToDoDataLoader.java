@@ -22,6 +22,7 @@ public class ToDoDataLoader implements CommandLineRunner {
         if(toDoListRepo.count() == 0) {
             ToDo toDo1 = new ToDo("Buy bread");
             ToDo toDo2 = new ToDo("Wash car");
+            toDo1.setCompleted(true);
 
             toDoListRepo.save(toDo1);
             toDoListRepo.save(toDo2);
