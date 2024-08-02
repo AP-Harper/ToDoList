@@ -10,7 +10,8 @@ public class ToDo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String username;
+    @ManyToOne
+    private Member member;
 
     private String task;
     private boolean completed;
@@ -24,7 +25,6 @@ public class ToDo {
 
     public ToDo(String task) {
         this.task = task;
-        this.username = "Default";
         completed = false;
         this.createdDate = Instant.now();
         this.modifiedDate = Instant.now();
@@ -39,13 +39,13 @@ public class ToDo {
     }
 
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+//    public String getUsername() {
+//        return username;
+//    }
+//
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
 
     public String getTask() {
         return task;

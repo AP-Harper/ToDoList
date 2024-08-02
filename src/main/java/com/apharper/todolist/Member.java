@@ -1,9 +1,9 @@
 package com.apharper.todolist;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Member {
@@ -12,7 +12,9 @@ public class Member {
     private Long id;
 
     private String name;
-//    private List<ToDo> tasks = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
+    private List<ToDo> tasks = new ArrayList<>();
 
     public Member() {
     }
@@ -39,15 +41,15 @@ public class Member {
     public void setName(String name) {
         this.name = name;
     }
-
+//
 //    public List<ToDo> getTasks() {
 //        return tasks;
 //    }
-
-//    @Override
-//    public List<ToDo> getToDoList() {
-//        return tasks;
+//
+//    public void addTask(ToDo task) {
+//        tasks.add(task);
 //    }
+
 
 //    @Override
 //    public List<ToDo> getCompleted() {
