@@ -5,16 +5,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
 public class UserController {
     private final UserRepo userRepo;
+    private final ToDoListRepo toDoListRepo;
 
 
-    public UserController(UserRepo userRepo) {
+    public UserController(UserRepo userRepo, ToDoListRepo toDoListRepo) {
         this.userRepo = userRepo;
+        this.toDoListRepo = toDoListRepo;
+
     }
 
     @GetMapping
@@ -39,29 +43,38 @@ public class UserController {
                     .body(new ApiResponse(false, "Unable to create user", null));
         }
     }
-
-
-
-
-//    @RequestMapping("/{user}/tasks")
-//    public ResponseEntity<ApiResponse> getAllTasks(@PathVariable Long id) {
+//
+//    @GetMapping
+//    @RequestMapping("/{id}")
+//    public ResponseEntity<ApiResponse> addTask(@RequestBody ToDo toDo) {
 //        try {
-//            List<ToDo> allTasks = toDoListRepo.findAll();
-//            List<ToDo> userTasks = new ArrayList<>();
-//            for (ToDo item : allTasks) {
-//                if (item.getId().equals(id)) {
-//                    userTasks.add(item);
-//                }
-//            }
-//            return ResponseEntity.ok(
-//                    new ApiResponse(true, "User tasks successfully retrieved", userTasks));
-//        }
-//        catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).
-//                    body(new ApiResponse(false, "User tasks list not retrieved", null));
-//        }
+//            ToDo toAdd = ToDoListRepo.s
 //
 //        }
+//    }
+
+
+
+
+    @RequestMapping("/{id}/tasks")
+    public ResponseEntity<ApiResponse> getAllTasks(@PathVariable Long id) {
+        try {
+            List<ToDo> allTasks = toDoListRepo.findAll();
+            List<ToDo> userTasks = new ArrayList<>();
+            for (ToDo item : allTasks) {
+                if (item.getId().equals(id)) {
+                    userTasks.add(item);
+                }
+            }
+            return ResponseEntity.ok(
+                    new ApiResponse(true, "User tasks successfully retrieved", userTasks));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).
+                    body(new ApiResponse(false, "User tasks list not retrieved", null));
+        }
+
+        }
 
 
 }

@@ -41,14 +41,14 @@ public class Member {
     public void setName(String name) {
         this.name = name;
     }
-//
-//    public List<ToDo> getTasks() {
-//        return tasks;
-//    }
-//
-//    public void addTask(ToDo task) {
-//        tasks.add(task);
-//    }
+
+    public List<ToDo> getTasks() {
+        return tasks;
+    }
+
+    public void addTask(ToDo task) {
+        tasks.add(task);
+    }
 
 
 //    @Override
