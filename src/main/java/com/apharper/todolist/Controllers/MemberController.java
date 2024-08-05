@@ -66,7 +66,7 @@ public class MemberController {
             List<ToDo> allTasks = toDoListRepo.findAll();
             List<ToDo> userTasks = new ArrayList<>();
             for (ToDo item : allTasks) {
-                if (item.getId().equals(id)) {
+                if (item.getMember().getId() == id) {
                     userTasks.add(item);
                 }
             }

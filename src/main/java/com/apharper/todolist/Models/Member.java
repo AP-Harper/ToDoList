@@ -13,8 +13,8 @@ public class Member {
 
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
-    private List<ToDo> tasks = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    private List<ToDo> tasks = new ArrayList<>();
 
     public Member() {
     }
@@ -42,13 +42,13 @@ public class Member {
         this.name = name;
     }
 
-    public List<ToDo> getTasks() {
-        return tasks;
-    }
-
-    public void addTask(ToDo task) {
-        tasks.add(task);
-    }
+//    public List<ToDo> getTasks() {
+//        return tasks;
+//    }
+//
+//    public void addTask(ToDo task) {
+//        tasks.add(task);
+//    }
 
 
 //    @Override

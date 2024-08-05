@@ -27,19 +27,24 @@ public class ToDoDataLoader implements CommandLineRunner {
     }
     private void loadData() {
         if(toDoListRepo.count() == 0) {
-            ToDo toDo1 = new ToDo("Buy bread");
-            ToDo toDo2 = new ToDo("Wash car");
-//            toDo2.setUser("Andrew");
-            toDo1.setCompleted(true);
-            toDoListRepo.save(toDo1);
-            toDoListRepo.save(toDo2);
-        }
-
-        if (memberRepo.count() == 0 ) {
             Member member1 = new Member("Andrew");
             Member member2 = new Member("John");
             memberRepo.save(member1);
             memberRepo.save(member2);
+            ToDo toDo1 = new ToDo("Buy bread", member1);
+            ToDo toDo2 = new ToDo("Wash car", member2);
+            ToDo toDo3 = new ToDo("Clean kitchen", member2);
+//            ToDo toDo1 = new ToDo("Buy bread");
+//            ToDo toDo2 = new ToDo("Wash car");
+//            ToDo toDo3 = new ToDo("Clean kitchen");
+            toDo1.setCompleted(true);
+            toDoListRepo.save(toDo1);
+            toDoListRepo.save(toDo2);
+            toDoListRepo.save(toDo3);
+        }
+
+        if (memberRepo.count() == 0 ) {
+
         }
 
         logger.info("Number of ToDo Items: {}", toDoListRepo.count());

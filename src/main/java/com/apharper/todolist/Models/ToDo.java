@@ -12,10 +12,8 @@ public class ToDo {
     private Long id;
     @ManyToOne
     private Member member;
-
     private String task;
     private boolean completed;
-
     private Instant createdDate;
     private Instant modifiedDate;
 
@@ -23,8 +21,9 @@ public class ToDo {
     public ToDo() {
     }
 
-    public ToDo(String task) {
+    public ToDo(String task, Member member) {
         this.task = task;
+        this.member = member;
         completed = false;
         this.createdDate = Instant.now();
         this.modifiedDate = Instant.now();
@@ -38,14 +37,13 @@ public class ToDo {
         this.id = id;
     }
 
+    public Member getMember() {
+        return member;
+    }
 
-//    public String getUsername() {
-//        return username;
-//    }
-//
-//    public void setUsername(String username) {
-//        this.username = username;
-//    }
+    public void setMember(Member member) {
+        this.member = member;
+    }
 
     public String getTask() {
         return task;
