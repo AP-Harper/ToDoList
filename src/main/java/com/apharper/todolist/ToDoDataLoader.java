@@ -1,5 +1,9 @@
 package com.apharper.todolist;
 
+import com.apharper.todolist.Models.Member;
+import com.apharper.todolist.Models.ToDo;
+import com.apharper.todolist.Repositories.MemberRepo;
+import com.apharper.todolist.Repositories.ToDoListRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +19,7 @@ public class ToDoDataLoader implements CommandLineRunner {
     ToDoListRepo toDoListRepo;
 
     @Autowired
-    UserRepo userRepo;
+    MemberRepo memberRepo;
 
     @Override
     public void run(String... args) throws Exception {
@@ -31,15 +35,15 @@ public class ToDoDataLoader implements CommandLineRunner {
             toDoListRepo.save(toDo2);
         }
 
-        if (userRepo.count() == 0 ) {
+        if (memberRepo.count() == 0 ) {
             Member member1 = new Member("Andrew");
             Member member2 = new Member("John");
-            userRepo.save(member1);
-            userRepo.save(member2);
+            memberRepo.save(member1);
+            memberRepo.save(member2);
         }
 
         logger.info("Number of ToDo Items: {}", toDoListRepo.count());
-        logger.info("Number of Users: {}", userRepo.count());
+        logger.info("Number of Users: {}", memberRepo.count());
 
     }
 }

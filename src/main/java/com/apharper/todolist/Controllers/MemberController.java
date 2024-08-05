@@ -1,8 +1,12 @@
-package com.apharper.todolist;
+package com.apharper.todolist.Controllers;
 
+import com.apharper.todolist.*;
+import com.apharper.todolist.Models.Member;
+import com.apharper.todolist.Models.ToDo;
+import com.apharper.todolist.Repositories.MemberRepo;
+import com.apharper.todolist.Repositories.ToDoListRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -10,13 +14,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
-public class UserController {
-    private final UserRepo userRepo;
+public class MemberController {
+    private final MemberRepo memberRepo;
     private final ToDoListRepo toDoListRepo;
 
 
-    public UserController(UserRepo userRepo, ToDoListRepo toDoListRepo) {
-        this.userRepo = userRepo;
+    public MemberController(MemberRepo memberRepo, ToDoListRepo toDoListRepo) {
+        this.memberRepo = memberRepo;
         this.toDoListRepo = toDoListRepo;
 
     }
@@ -24,8 +28,8 @@ public class UserController {
     @GetMapping
     public ResponseEntity<ApiResponse> getAllUsers() {
         try {
-            List<Member> userList = userRepo.findAll();
-            return ResponseEntity.ok(new ApiResponse(true, "Users returned successfully", userList));
+            List<Member> memberList = memberRepo.findAll();
+            return ResponseEntity.ok(new ApiResponse(true, "Users returned successfully", memberList));
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).
                     body(new ApiResponse(false, "User list not retrieved" , null));
@@ -35,7 +39,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<ApiResponse> addUser(@RequestBody Member member) {
         try {
-            Member toAdd = userRepo.save(member);
+            Member toAdd = memberRepo.save(member);
             return ResponseEntity.ok
                     (new ApiResponse(true, "User created successfully", toAdd));
         } catch (Exception e) {

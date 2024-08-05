@@ -1,4 +1,4 @@
-package com.apharper.todolist;
+package com.apharper.todolist.Models;
 
 import jakarta.persistence.*;
 
