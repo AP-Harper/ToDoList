@@ -1,5 +1,6 @@
 package com.apharper.todolist.Controllers;
 
+import com.apharper.todolist.Services.MemberServiceImpl;
 import com.apharper.todolist.*;
 import com.apharper.todolist.Models.Member;
 import com.apharper.todolist.Models.ToDo;
@@ -9,20 +10,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping({"members", "members/"})
 public class MemberController {
     private final MemberRepo memberRepo;
     private final ToDoListRepo toDoListRepo;
 
 
-    public MemberController(MemberRepo memberRepo, ToDoListRepo toDoListRepo) {
+    private final MemberServiceImpl memberService;
+
+
+    public MemberController(MemberRepo memberRepo, ToDoListRepo toDoListRepo, MemberServiceImpl memberService) {
         this.memberRepo = memberRepo;
         this.toDoListRepo = toDoListRepo;
-
+        this.memberService = memberService;
     }
 
     @GetMapping
@@ -60,22 +63,30 @@ public class MemberController {
 
 
 
-    @RequestMapping("/{id}/tasks")
-    public ResponseEntity<ApiResponse> getAllTasks(@PathVariable Long id) {
+    @RequestMapping({"/{id}/tasks", "/{id}/tasks/"})
+    public ResponseEntity<ApiResponse> getAllUserTasks(@PathVariable Long id) {
         try {
-            List<ToDo> allTasks = toDoListRepo.findAll();
-            List<ToDo> userTasks = new ArrayList<>();
-            for (ToDo item : allTasks) {
-                if (item.getMember().getId() == id) {
-                    userTasks.add(item);
-                }
-            }
+            Member member = memberService.findById(id).get();
+            List<ToDo> userTasks = member.getTasks();
+
+
+
+//            List<ToDo> allTasks = toDoListRepo.findAll();
+//            List<ToDo> userTasks = new ArrayList<>();
+//            for (ToDo item : allTasks) {
+//                if (item.getMember().getId() == id) {
+//                    userTasks.add(item);
+//                }
+//            }
             return ResponseEntity.ok(
                     new ApiResponse(true, "User tasks successfully retrieved", userTasks));
         }
         catch (Exception e) {
+            Member member = memberService.findById(id).get();
+            List<ToDo> userTasks = member.getTasks();
+
             return ResponseEntity.status(HttpStatus.NOT_FOUND).
-                    body(new ApiResponse(false, "User tasks list not retrieved", null));
+                    body(new ApiResponse(false, "User tasks list not retrieved", userTasks));
         }
 
         }

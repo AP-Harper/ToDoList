@@ -1,6 +1,7 @@
 package com.apharper.todolist.Controllers;
 
 import com.apharper.todolist.ApiResponse;
+import com.apharper.todolist.Models.Member;
 import com.apharper.todolist.Models.ToDo;
 import com.apharper.todolist.Repositories.ToDoListRepo;
 import org.springframework.http.HttpStatus;
@@ -88,6 +89,8 @@ public class ToDoListController {
     public ResponseEntity<ApiResponse> createToDo(@RequestBody ToDo todo) {
         try {
             ToDo newToDo = toDoListRepo.save(todo);
+            Member member = todo.getMember();
+            member.addTask(todo);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ApiResponse(true, "New ToDo Item created successfully", newToDo));
         } catch (Exception e) {

@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.lang.NonNull;
 
 import java.time.Instant;
@@ -21,9 +24,10 @@ public class ToDo {
     private Member member;
     private String task;
     private boolean completed;
-    @CreationTimestamp
+    @Column(updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Instant createdDate;
-    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private Instant modifiedDate;
 
 
