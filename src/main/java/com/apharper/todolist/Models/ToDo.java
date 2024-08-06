@@ -1,6 +1,11 @@
 package com.apharper.todolist.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.lang.NonNull;
 
 import java.time.Instant;
 
@@ -11,10 +16,14 @@ public class ToDo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
+    @JoinColumn(name="member_id", nullable = false)
+//    @JsonIgnore
     private Member member;
     private String task;
     private boolean completed;
+    @CreationTimestamp
     private Instant createdDate;
+    @UpdateTimestamp
     private Instant modifiedDate;
 
 

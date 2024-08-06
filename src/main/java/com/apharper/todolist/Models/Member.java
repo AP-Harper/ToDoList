@@ -1,6 +1,8 @@
 package com.apharper.todolist.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +15,9 @@ public class Member {
 
     private String name;
 
-//    @OneToMany(mappedBy = "member")
-//    private List<ToDo> tasks = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    @JsonIgnore
+    private List<ToDo> tasks = new ArrayList<>();
 
     public Member() {
     }
@@ -42,13 +45,13 @@ public class Member {
         this.name = name;
     }
 
-//    public List<ToDo> getTasks() {
-//        return tasks;
-//    }
-//
-//    public void addTask(ToDo task) {
-//        tasks.add(task);
-//    }
+    public List<ToDo> getTasks() {
+        return tasks;
+    }
+
+    public void addTask(ToDo task) {
+        tasks.add(task);
+    }
 
 
 //    @Override
