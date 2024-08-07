@@ -4,6 +4,7 @@ import com.apharper.todolist.ApiResponse;
 import com.apharper.todolist.Models.Member;
 import com.apharper.todolist.Models.ToDo;
 import com.apharper.todolist.Repositories.ToDoListRepo;
+import com.apharper.todolist.Services.ToDoListService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,16 +16,16 @@ import java.util.List;
 @RestController
 @RequestMapping("api/todos")
 public class ToDoListController {
-    private final ToDoListRepo toDoListRepo;
+    private final ToDoListService toDoListService;
 
-    public ToDoListController(ToDoListRepo toDoListRepo) {
-        this.toDoListRepo = toDoListRepo;
+    public ToDoListController(ToDoListService toDoListService) {
+        this.toDoListService = toDoListService;
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse> getAllToDos(){
         try {
-            List<ToDo> toDolist = toDoListRepo.findAll();
+            List<ToDo> toDolist = toDoListService.findAll();
             return ResponseEntity.
                     ok(new ApiResponse(true, "All ToDos successfully retrieved", toDolist));
         } catch (Exception e) {
@@ -36,7 +37,7 @@ public class ToDoListController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getToDoById(@PathVariable Long id) {
         try {
-            ToDo toDo = toDoListRepo.findById(id).orElseThrow(RuntimeException::new);
+            ToDo toDo = toDoListService.findById(id).orElseThrow(RuntimeException::new);
             return ResponseEntity.ok()
                     .body(new ApiResponse(true, "ToDo retrieved successfully", toDo));
         } catch (Exception e) {
@@ -48,14 +49,7 @@ public class ToDoListController {
     @GetMapping("/completed")
     public ResponseEntity<ApiResponse> getCompletedTasks() {
         try {
-            List<ToDo> toDolist = toDoListRepo.findAll();
-            List<ToDo> completed = new ArrayList<>();
-
-            for (ToDo item : toDolist) {
-                if (item.isCompleted()) {
-                    completed.add(item);
-                }
-            }
+            List<ToDo> completed = toDoListService.getCompletedTasks();
             return  ResponseEntity.ok().
                     body(new ApiResponse(true, "Completed tasks retrieved successfully", completed));
         } catch (Exception e) {
@@ -67,14 +61,7 @@ public class ToDoListController {
     @GetMapping("/incomplete")
     public ResponseEntity<ApiResponse> getIncompleteTasks() {
         try {
-            List<ToDo> toDoList = toDoListRepo.findAll();
-            List<ToDo> incomplete = new ArrayList<>();
-
-            for (ToDo item : toDoList) {
-                if (!item.isCompleted()) {
-                    incomplete.add(item);
-                }
-            }
+            List<ToDo> incomplete = toDoListService.getIncompleteTasks();
             return ResponseEntity.ok()
                     .body(new ApiResponse(
                             true, "Incompleted tasks successfully retrieved", incomplete));
@@ -88,7 +75,7 @@ public class ToDoListController {
     @PostMapping
     public ResponseEntity<ApiResponse> createToDo(@RequestBody ToDo todo) {
         try {
-            ToDo newToDo = toDoListRepo.save(todo);
+            ToDo newToDo = toDoListService.save(todo);
             Member member = todo.getMember();
             member.addTask(todo);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -102,11 +89,11 @@ public class ToDoListController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateToDo(@PathVariable Long id, @RequestBody ToDo toDoDetails) {
         try {
-            ToDo toDoToUpdate = toDoListRepo.findById(id).orElseThrow(RuntimeException::new);
+            ToDo toDoToUpdate = toDoListService.findById(id).orElseThrow(RuntimeException::new);
             toDoToUpdate.setTask(toDoDetails.getTask());
             toDoToUpdate.setCompleted(toDoDetails.isCompleted());
             toDoToUpdate.setModifiedDate(Instant.now());
-            ToDo updatedToDo = toDoListRepo.save(toDoToUpdate);
+            ToDo updatedToDo = toDoListService.save(toDoToUpdate);
             return ResponseEntity.ok(new ApiResponse(true, id + " updated successfully", updatedToDo));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -117,8 +104,8 @@ public class ToDoListController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteToDo(@PathVariable Long id) {
         try {
-            ToDo toDoToDelete = toDoListRepo.findById(id).orElseThrow(RuntimeException::new);
-            toDoListRepo.delete(toDoToDelete);
+            ToDo toDoToDelete = toDoListService.findById(id).orElseThrow(RuntimeException::new);
+            toDoListService.delete(toDoToDelete);
             return ResponseEntity.ok(new ApiResponse(true, id + " deleted", null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

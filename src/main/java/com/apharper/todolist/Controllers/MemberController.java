@@ -15,23 +15,18 @@ import java.util.List;
 @RestController
 @RequestMapping({"members", "members/"})
 public class MemberController {
-    private final MemberRepo memberRepo;
-    private final ToDoListRepo toDoListRepo;
-
 
     private final MemberServiceImpl memberService;
 
 
-    public MemberController(MemberRepo memberRepo, ToDoListRepo toDoListRepo, MemberServiceImpl memberService) {
-        this.memberRepo = memberRepo;
-        this.toDoListRepo = toDoListRepo;
+    public MemberController(MemberServiceImpl memberService) {
         this.memberService = memberService;
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse> getAllUsers() {
         try {
-            List<Member> memberList = memberRepo.findAll();
+            List<Member> memberList = memberService.findAll();
             return ResponseEntity.ok(new ApiResponse(true, "Users returned successfully", memberList));
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).
@@ -42,7 +37,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<ApiResponse> addUser(@RequestBody Member member) {
         try {
-            Member toAdd = memberRepo.save(member);
+            Member toAdd = memberService.save(member);
             return ResponseEntity.ok
                     (new ApiResponse(true, "User created successfully", toAdd));
         } catch (Exception e) {
@@ -50,46 +45,20 @@ public class MemberController {
                     .body(new ApiResponse(false, "Unable to create user", null));
         }
     }
-//
-//    @GetMapping
-//    @RequestMapping("/{id}")
-//    public ResponseEntity<ApiResponse> addTask(@RequestBody ToDo toDo) {
-//        try {
-//            ToDo toAdd = ToDoListRepo.s
-//
-//        }
-//    }
-
-
-
 
     @RequestMapping({"/{id}/tasks", "/{id}/tasks/"})
     public ResponseEntity<ApiResponse> getAllUserTasks(@PathVariable Long id) {
         try {
             Member member = memberService.findById(id).get();
             List<ToDo> userTasks = member.getTasks();
-
-
-
-//            List<ToDo> allTasks = toDoListRepo.findAll();
-//            List<ToDo> userTasks = new ArrayList<>();
-//            for (ToDo item : allTasks) {
-//                if (item.getMember().getId() == id) {
-//                    userTasks.add(item);
-//                }
-//            }
             return ResponseEntity.ok(
                     new ApiResponse(true, "User tasks successfully retrieved", userTasks));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Member member = memberService.findById(id).get();
             List<ToDo> userTasks = member.getTasks();
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).
                     body(new ApiResponse(false, "User tasks list not retrieved", userTasks));
         }
-
-        }
-
-
+    }
 }
