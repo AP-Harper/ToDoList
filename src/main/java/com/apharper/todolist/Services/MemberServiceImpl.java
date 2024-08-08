@@ -25,6 +25,30 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public List<ToDo> findUserTasks(Long id) {
+        try {
+            Member member = memberRepo.findById(id).orElseThrow(Exception::new);
+            return member.getTasks();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
+    public List<ToDo> findUserCompleted(Long id) {
+        List<ToDo> tasks = this.findUserTasks(id);
+        List<ToDo> completed = new ArrayList<>();
+
+        for(ToDo item : tasks) {
+            if (item.isCompleted()) {
+                completed.add(item);
+            }
+        }
+        return completed;
+    }
+
+    @Override
     public Member save (Member member) {
         memberRepo.save(member);
         return member;

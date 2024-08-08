@@ -13,6 +13,10 @@ public interface MemberService {
 
     List<Member> findAll();
 
+    List<ToDo> findUserTasks(Long id);
+
+    List<ToDo> findUserCompleted(Long id);
+
     Member save(Member member);
 
     void addTaskToMember(ToDo toDo);

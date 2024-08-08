@@ -9,6 +9,7 @@ import com.apharper.todolist.Repositories.ToDoListRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -61,4 +62,14 @@ public class MemberController {
                     body(new ApiResponse(false, "User tasks list not retrieved", userTasks));
         }
     }
+
+//    @RequestMapping({"/{id}/tasks/completed", "/{id}/tasks/completed/"})
+//        public ResponseEntity<ApiResponse> getUserCompletedTasks(@PathVariable Long id) {
+//        try {
+//                Member member = memberService.findById(id).orElseThrow(Exception::new);
+//
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
