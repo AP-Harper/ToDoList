@@ -17,6 +17,8 @@ public interface MemberService {
 
     List<ToDo> findUserCompleted(Long id);
 
+    List<ToDo> findUserIncompleted(Long id);
+
     Member save(Member member);
 
     void addTaskToMember(ToDo toDo);

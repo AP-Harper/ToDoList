@@ -14,6 +14,10 @@ public class MemberServiceImpl implements MemberService {
 
     private MemberRepo memberRepo;
 
+    public MemberServiceImpl(MemberRepo memberRepo) {
+        this.memberRepo = memberRepo;
+    }
+
     @Override
     public Optional<Member> findById(Long id) {
         return memberRepo.findById(id);
@@ -47,6 +51,20 @@ public class MemberServiceImpl implements MemberService {
         }
         return completed;
     }
+
+    @Override
+    public List<ToDo> findUserIncompleted(Long id) {
+        List<ToDo> tasks = this.findUserTasks(id);
+        List<ToDo> incompleted = new ArrayList<>();
+
+        for(ToDo item : tasks) {
+            if (!(item.isCompleted())) {
+                incompleted.add(item);
+            }
+        }
+        return incompleted;
+    }
+
 
     @Override
     public Member save (Member member) {

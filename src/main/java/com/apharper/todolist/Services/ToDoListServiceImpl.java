@@ -13,6 +13,10 @@ public class ToDoListServiceImpl implements ToDoListService {
 
     ToDoListRepo toDoListRepo;
 
+    public ToDoListServiceImpl(ToDoListRepo toDoListRepo) {
+        this.toDoListRepo = toDoListRepo;
+    }
+
     @Override
     public Optional<ToDo> findById(Long id) {
         return toDoListRepo.findById(id);

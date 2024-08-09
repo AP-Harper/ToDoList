@@ -63,13 +63,30 @@ public class MemberController {
         }
     }
 
-//    @RequestMapping({"/{id}/tasks/completed", "/{id}/tasks/completed/"})
-//        public ResponseEntity<ApiResponse> getUserCompletedTasks(@PathVariable Long id) {
-//        try {
-//                Member member = memberService.findById(id).orElseThrow(Exception::new);
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    @RequestMapping({"/{id}/tasks/complete", "/{id}/tasks/complete/"})
+        public ResponseEntity<ApiResponse> getUserCompletedTasks(@PathVariable Long id) {
+        try {
+            List<ToDo> complete = memberService.findUserCompleted(id);
+            return ResponseEntity.ok(
+                    new ApiResponse(true, "User completed tasks successfully retrieved", complete));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(false, "Completed tasks not retrieved", null));
+
+        }
+    }
+
+
+    @RequestMapping({"/{id}/tasks/incomplete", "/{id}/tasks/incomplete/"})
+    public ResponseEntity<ApiResponse> getUserIncompleteTasks(@PathVariable Long id) {
+        try {
+            List<ToDo> incomplete = memberService.findUserIncompleted(id);
+            return ResponseEntity.ok(
+                    new ApiResponse(true, "User complete tasks successfully retrieved", incomplete));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(false, "Incomplete tasks not retrieved", null));
+        }
+    }
 }
