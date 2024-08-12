@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/todos")
+@RequestMapping({"tasks", "tasks/"})
 public class ToDoListController {
     private final ToDoListService toDoListService;
 
