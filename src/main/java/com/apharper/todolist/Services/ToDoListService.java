@@ -13,12 +13,14 @@ public interface ToDoListService {
 
     List<ToDo> findAll();
 
-    ToDo save(ToDo toDo);
-
     List<ToDo> getCompletedTasks();
 
     List<ToDo> getIncompleteTasks();
 
-    void delete(ToDo toDo);
+    ToDo createToDo(ToDo toDo);
+
+    ToDo setAsCompleted(Long id);
+
+    void deleteToDo(ToDo toDo);
 
 }

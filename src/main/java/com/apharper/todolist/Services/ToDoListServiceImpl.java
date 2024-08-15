@@ -1,9 +1,11 @@
 package com.apharper.todolist.Services;
 
+import com.apharper.todolist.Models.Member;
 import com.apharper.todolist.Models.ToDo;
 import com.apharper.todolist.Repositories.ToDoListRepo;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,12 +28,6 @@ public class ToDoListServiceImpl implements ToDoListService {
     @Override
     public List<ToDo> findAll() {
         return toDoListRepo.findAll();
-    }
-
-    @Override
-    public ToDo save(ToDo toDo) {
-        toDoListRepo.save(toDo);
-        return toDo;
     }
 
     @Override
@@ -61,7 +57,25 @@ public class ToDoListServiceImpl implements ToDoListService {
     }
 
     @Override
-    public void delete(ToDo toDo) {
+    public ToDo createToDo(ToDo toDo) {
+        toDoListRepo.save(toDo);
+        Member member = toDo.getMember();
+        member.addTask(toDo);
+        return toDo;
+    }
+
+    @Override
+    public ToDo setAsCompleted(Long id) {
+        ToDo toDoToUpdate = this.findById(id).orElseThrow(RuntimeException::new);
+        toDoToUpdate.setCompleted(true);
+        toDoToUpdate.setModifiedDate(Instant.now());
+        toDoListRepo.save(toDoToUpdate);
+        return toDoToUpdate;
+    }
+
+    @Override
+    public void deleteToDo(ToDo toDo) {
         toDoListRepo.delete(toDo);
     }
+
 }

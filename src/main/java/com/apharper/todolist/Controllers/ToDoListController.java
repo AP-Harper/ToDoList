@@ -75,9 +75,7 @@ public class ToDoListController {
     @PostMapping
     public ResponseEntity<ApiResponse> createToDo(@RequestBody ToDo todo) {
         try {
-            ToDo newToDo = toDoListService.save(todo);
-            Member member = todo.getMember();
-            member.addTask(todo);
+            ToDo newToDo = toDoListService.createToDo(todo);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ApiResponse(true, "New ToDo Item created successfully", newToDo));
         } catch (Exception e) {
@@ -86,14 +84,10 @@ public class ToDoListController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateToDo(@PathVariable Long id, @RequestBody ToDo toDoDetails) {
+    @PutMapping("/completed/{id}")
+    public ResponseEntity<ApiResponse> setAsCompleted(@PathVariable Long id) {
         try {
-            ToDo toDoToUpdate = toDoListService.findById(id).orElseThrow(RuntimeException::new);
-            toDoToUpdate.setTask(toDoDetails.getTask());
-            toDoToUpdate.setCompleted(toDoDetails.isCompleted());
-            toDoToUpdate.setModifiedDate(Instant.now());
-            ToDo updatedToDo = toDoListService.save(toDoToUpdate);
+            ToDo updatedToDo = toDoListService.setAsCompleted(id);
             return ResponseEntity.ok(new ApiResponse(true, id + " updated successfully", updatedToDo));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -101,11 +95,11 @@ public class ToDoListController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteToDo(@PathVariable Long id) {
         try {
             ToDo toDoToDelete = toDoListService.findById(id).orElseThrow(RuntimeException::new);
-            toDoListService.delete(toDoToDelete);
+            toDoListService.deleteToDo(toDoToDelete);
             return ResponseEntity.ok(new ApiResponse(true, id + " deleted", null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
