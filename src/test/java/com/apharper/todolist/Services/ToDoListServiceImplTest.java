@@ -118,8 +118,4 @@ class ToDoListServiceImplTest {
         assertTrue(toDo2.isCompleted());
     }
 
-    @Test
-    void deleteToDo() {
-
-    }
 }
