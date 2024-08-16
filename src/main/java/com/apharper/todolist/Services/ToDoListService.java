@@ -21,6 +21,6 @@ public interface ToDoListService {
 
     ToDo setAsCompleted(Long id);
 
-    void deleteToDo(ToDo toDo);
+    void deleteToDo(Long toDo);
 
 }

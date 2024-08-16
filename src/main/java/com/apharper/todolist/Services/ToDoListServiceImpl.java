@@ -74,8 +74,9 @@ public class ToDoListServiceImpl implements ToDoListService {
     }
 
     @Override
-    public void deleteToDo(ToDo toDo) {
-        toDoListRepo.delete(toDo);
+    public void deleteToDo(Long id) {
+        ToDo toDelete = this.findById(id).orElseThrow(RuntimeException::new);
+        toDoListRepo.delete(toDelete);
     }
 
 }

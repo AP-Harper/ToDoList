@@ -98,8 +98,8 @@ public class ToDoListController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteToDo(@PathVariable Long id) {
         try {
-            ToDo toDoToDelete = toDoListService.findById(id).orElseThrow(RuntimeException::new);
-            toDoListService.deleteToDo(toDoToDelete);
+//            ToDo toDoToDelete = toDoListService.findById(id).orElseThrow(RuntimeException::new);
+            toDoListService.deleteToDo(id);
             return ResponseEntity.ok(new ApiResponse(true, id + " deleted", null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
