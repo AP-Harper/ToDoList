@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ToDoListServiceImplTest {
@@ -56,10 +56,12 @@ class ToDoListServiceImplTest {
 
     @Test
     void findById() {
-//        Long id = 1L;
-//        ToDo toDoById = toDoListService.findById(id).orElseThrow(RuntimeException::new);
-//        when(toDoListService.findById(id)).thenReturn(Optional.of(toDoById));
-//        assertEquals(id, toDoById.getId());
+        Long id = 1L;
+        when(toDoListService.findById(Mockito.anyLong())).thenReturn(Optional.of(toDo1));
+        toDoListService.findById(id);
+        assertNotNull(toDo1);
+        assertEquals(toDo1.getId(), id);
+
     }
 
     @Test
@@ -67,6 +69,7 @@ class ToDoListServiceImplTest {
         when(toDoListService.findAll()).thenReturn(tasks);
         List<ToDo> result = toDoListService.findAll();
         assertEquals(3, tasks.size());
+        verify(toDoListRepo, times(1)).findAll();
     }
 
     @Test
@@ -99,13 +102,24 @@ class ToDoListServiceImplTest {
 
     @Test
     void createToDo() {
+        toDoListService.createToDo(toDo1);
+        verify(toDoListRepo, times(1)).save(toDo1);
     }
 
     @Test
     void setAsCompleted() {
+
+        long toDoId = 2;
+        when(toDoListService.findById(Mockito.anyLong())).thenReturn(Optional.of(toDo2));
+        when(toDoListService.setAsCompleted(Mockito.anyLong())).thenReturn(toDo2);
+        toDoListService.setAsCompleted(toDoId);
+
+        assertNotNull(toDo2);
+        assertTrue(toDo2.isCompleted());
     }
 
     @Test
     void deleteToDo() {
+
     }
 }

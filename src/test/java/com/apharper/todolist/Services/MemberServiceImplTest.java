@@ -36,15 +36,6 @@ class MemberServiceImplTest {
 
     @Test
     void findAll() {
-        Member member = new Member("Test");
-        List<ToDo> tasks = Arrays.asList(
-                new ToDo("Wash", member),
-                new ToDo("Clean", member)
-        );
-
-        when (toDoListService.findAll()).thenReturn(tasks);
-        List<ToDo> result = toDoListService.findAll();
-        assertEquals(2, result.size());
     }
 
     @Test
