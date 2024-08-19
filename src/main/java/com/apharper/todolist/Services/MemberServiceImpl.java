@@ -67,7 +67,7 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Override
-    public Member save (Member member) {
+    public Member addMember (Member member) {
         memberRepo.save(member);
         return member;
     }

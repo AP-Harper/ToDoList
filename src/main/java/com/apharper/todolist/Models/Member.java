@@ -53,15 +53,4 @@ public class Member {
         tasks.add(task);
     }
 
-
-//    @Override
-//    public List<ToDo> getCompleted() {
-//        //TODO
-//        return null;
-//    }
-//
-//    @Override
-//    public List<ToDo> getIncomplete() {
-//        return null;
-//    }
 }

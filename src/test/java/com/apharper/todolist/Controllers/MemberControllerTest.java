@@ -5,6 +5,7 @@ import com.apharper.todolist.Models.ToDo;
 import com.apharper.todolist.Services.MemberServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -55,12 +57,10 @@ class MemberControllerTest {
         toDo2.setId(2L);
 
         members = Arrays.asList(member1, member2);
-
     }
 
     @Test
-    void getAllUsers() throws Exception {
-
+    void testGetAllUsers() throws Exception {
         when(memberService.findAll()).thenReturn(members);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -73,29 +73,72 @@ class MemberControllerTest {
     }
 
     @Test
-    void addUser() {
+    void testAddUser() throws Exception {
+        member1.setId(1L);
+        member1.setName("Andrew");
+        String jsonData = "{\"id\":1,\"name\":\"Test\"}";
+        when(memberService.addMember(Mockito.any(Member.class))).thenReturn(member1);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/members")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonData))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value(1))
+                .andExpect(jsonPath("$.data.name").value("Andrew"));
     }
 
     @Test
-    void getAllUserTasks() throws Exception {
+    void testGetAllUserTasks() throws Exception {
         Long userId = 1L;
+        member1.setId(1L);
         List<ToDo> membersTasks = Arrays.asList(toDo, toDo2);
-        when(memberService.findUserTasks(userId)).thenReturn(membersTasks);
+        when(memberService.findUserTasks(Mockito.anyLong())).thenReturn(membersTasks);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/members/{id}/tasks", userId)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
-//                .andExpect("$.data.*", hasSize(2));
-
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.*", hasSize(2)))
+                .andExpect(jsonPath("$.data[0].id").value(1))
+                .andExpect(jsonPath("$.data[1].id").value(2));
     }
 
     @Test
-    void getUserCompletedTasks() {
+    void testGetUserCompletedTasks() throws Exception {
+        Long userId = 1L;
+        toDo.setCompleted(true);
+        toDo2.setCompleted(true);
+        List<ToDo> completedTasks = Arrays.asList(toDo, toDo2);
+        when(memberService.findUserCompleted(Mockito.anyLong())).thenReturn(completedTasks);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/members/{id}/tasks/complete", userId)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.*", hasSize(2)))
+                .andExpect(jsonPath("$.data[0].completed").value(true))
+                .andExpect(jsonPath("$.data[1].completed").value(true));
     }
 
     @Test
-    void getUserIncompleteTasks() {
+    void testGetUserIncompleteTasks() throws Exception {
+        Long userId = 1L;
+        toDo.setCompleted(false);
+        toDo2.setCompleted(false);
+        List<ToDo> incompleteTasks = Arrays.asList(toDo, toDo2);
+        when(memberService.findUserIncompleted(Mockito.anyLong())).thenReturn(incompleteTasks);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/members/{id}/tasks/incomplete", userId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.*", hasSize(2)))
+                .andExpect(jsonPath("$.data[0].completed").value(false))
+                .andExpect(jsonPath("$.data[1].completed").value(false));
     }
 }

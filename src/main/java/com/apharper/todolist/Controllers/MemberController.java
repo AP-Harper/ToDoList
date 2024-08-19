@@ -7,6 +7,7 @@ import com.apharper.todolist.Models.ToDo;
 import com.apharper.todolist.Repositories.MemberRepo;
 import com.apharper.todolist.Repositories.ToDoListRepo;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -38,7 +39,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<ApiResponse> addUser(@RequestBody Member member) {
         try {
-            Member toAdd = memberService.save(member);
+            Member toAdd = memberService.addMember(member);
             return ResponseEntity.ok
                     (new ApiResponse(true, "User created successfully", toAdd));
         } catch (Exception e) {
@@ -48,18 +49,17 @@ public class MemberController {
     }
 
     @RequestMapping({"/{id}/tasks", "/{id}/tasks/"})
-    public ResponseEntity<ApiResponse> getAllUserTasks(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> getAllUserTasks(@PathVariable Long id, Member member) {
         try {
-            Member member = memberService.findById(id).get();
-            List<ToDo> userTasks = member.getTasks();
+//            Member member = memberService.findById(id).orElse(null);
+            List<ToDo> userTasks = memberService.findUserTasks(id);
             return ResponseEntity.ok(
                     new ApiResponse(true, "User tasks successfully retrieved", userTasks));
         } catch (Exception e) {
-            Member member = memberService.findById(id).get();
-            List<ToDo> userTasks = member.getTasks();
+
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).
-                    body(new ApiResponse(false, "User tasks list not retrieved", userTasks));
+                    body(new ApiResponse(false, "User tasks list not retrieved", null));
         }
     }
 
