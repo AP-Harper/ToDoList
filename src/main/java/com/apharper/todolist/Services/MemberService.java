@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface MemberService {
 
-    Optional<Member> findById(Long id);
+    Member getMemberById(Long id);
 
     List<Member> findAll();
 
@@ -18,11 +18,8 @@ public interface MemberService {
 
     List<ToDo> findUserCompleted(Long id);
 
-    List<ToDo> findUserIncompleted(Long id);
+    List<ToDo> findUserIncomplete(Long id);
 
     Member addMember(Member member);
-
-    void addTaskToMember(ToDo toDo);
-
 
 }

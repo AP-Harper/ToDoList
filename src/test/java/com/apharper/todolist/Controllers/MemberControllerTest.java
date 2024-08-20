@@ -12,19 +12,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = MemberController.class)
@@ -130,7 +122,7 @@ class MemberControllerTest {
         toDo.setCompleted(false);
         toDo2.setCompleted(false);
         List<ToDo> incompleteTasks = Arrays.asList(toDo, toDo2);
-        when(memberService.findUserIncompleted(Mockito.anyLong())).thenReturn(incompleteTasks);
+        when(memberService.findUserIncomplete(Mockito.anyLong())).thenReturn(incompleteTasks);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/members/{id}/tasks/incomplete", userId)

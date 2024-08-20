@@ -3,6 +3,8 @@ package com.apharper.todolist.Services;
 import com.apharper.todolist.Models.Member;
 import com.apharper.todolist.Models.ToDo;
 import com.apharper.todolist.Repositories.MemberRepo;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.Optional;
 @Service
 public class MemberServiceImpl implements MemberService {
 
+
     private MemberRepo memberRepo;
 
     public MemberServiceImpl(MemberRepo memberRepo) {
@@ -19,8 +22,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<Member> findById(Long id) {
-        return memberRepo.findById(id);
+    public Member getMemberById(Long id) {
+        return memberRepo.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("Entity not found with id " + id));
     }
 
     @Override
@@ -31,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<ToDo> findUserTasks(Long id) {
         try {
-            Member member = memberRepo.findById(id).orElseThrow(Exception::new);
+            Member member = this.getMemberById(id);
             return member.getTasks();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -53,28 +57,21 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<ToDo> findUserIncompleted(Long id) {
+    public List<ToDo> findUserIncomplete(Long id) {
         List<ToDo> tasks = this.findUserTasks(id);
-        List<ToDo> incompleted = new ArrayList<>();
+        List<ToDo> incomplete = new ArrayList<>();
 
         for(ToDo item : tasks) {
             if (!(item.isCompleted())) {
-                incompleted.add(item);
+                incomplete.add(item);
             }
         }
-        return incompleted;
+        return incomplete;
     }
-
 
     @Override
     public Member addMember (Member member) {
         memberRepo.save(member);
         return member;
-    }
-
-    @Override
-    public void addTaskToMember(ToDo toDo) {
-        Member member = toDo.getMember();
-        member.addTask(toDo);
     }
 }

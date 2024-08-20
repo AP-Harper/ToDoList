@@ -81,7 +81,7 @@ public class MemberController {
     @RequestMapping({"/{id}/tasks/incomplete", "/{id}/tasks/incomplete/"})
     public ResponseEntity<ApiResponse> getUserIncompleteTasks(@PathVariable Long id) {
         try {
-            List<ToDo> incomplete = memberService.findUserIncompleted(id);
+            List<ToDo> incomplete = memberService.findUserIncomplete(id);
             return ResponseEntity.ok(
                     new ApiResponse(true, "User complete tasks successfully retrieved", incomplete));
         } catch (Exception e) {

@@ -10,18 +10,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ToDoListServiceImplTest {
-
     @Mock
     ToDoListRepo toDoListRepo;
 
@@ -50,8 +47,6 @@ class ToDoListServiceImplTest {
         toDo1.setCompleted(true);
 
         tasks = Arrays.asList(toDo1, toDo2, toDo3);
-
-
     }
 
     @Test
@@ -63,7 +58,6 @@ class ToDoListServiceImplTest {
         assertEquals(toDo1.getId(), id);
 
     }
-
     @Test
     void findAll() {
         when(toDoListService.findAll()).thenReturn(tasks);
