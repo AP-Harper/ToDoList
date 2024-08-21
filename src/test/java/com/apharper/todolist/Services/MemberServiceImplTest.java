@@ -4,6 +4,7 @@ import com.apharper.todolist.Models.Member;
 import com.apharper.todolist.Models.ToDo;
 import com.apharper.todolist.Repositories.MemberRepo;
 import com.apharper.todolist.Repositories.ToDoListRepo;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +38,7 @@ class MemberServiceImplTest {
     @BeforeEach
     void setUp() {
         member1 = new Member("Member 1");
-        member1.setId(1L);
+//        member1.setId(1L);
         member1.setName("Andrew");
         member2 = new Member("Member 2");
         toDo = new ToDo("Wash", member1);
@@ -45,11 +46,10 @@ class MemberServiceImplTest {
     }
 
     @Test
-    void findById() {
+    void getMemberById() {
         Long memberId = 1L;
-        member1.setId(memberId);
         member1.setName("Test");
-        when(memberRepo.findById(1L)).thenReturn(Optional.of(member1));
+        when(memberRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(member1));
         Member result = memberService.getMemberById(memberId);
         assertNotNull(result);
         assertEquals("Test", result.getName());
